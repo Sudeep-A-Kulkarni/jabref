@@ -128,6 +128,9 @@ public class NewEntryView extends BaseDialog<BibEntry> {
 
     @FXML private TextArea bibtexText;
 
+    @FXML private Tab tabEnterUrl;
+    @FXML private TextField urlText;
+
     private BibEntry result;
 
     public NewEntryView(NewEntryDialogTab initialApproach, GuiPreferences preferences, LibraryTab libraryTab, DialogService dialogService) {
@@ -206,12 +209,17 @@ public class NewEntryView extends BaseDialog<BibEntry> {
                 tabs.getSelectionModel().select(tabSpecifyBibtex);
                 switchSpecifyBibtex();
                 break;
+            case NewEntryDialogTab.ENTER_URL:
+                tabs.getSelectionModel().select(tabEnterUrl);
+                switchEnterUrl();
+                break;
         }
 
         tabAddEntry.setOnSelectionChanged(_ -> switchAddEntry());
         tabLookupIdentifier.setOnSelectionChanged(_ -> switchLookupIdentifier());
         tabInterpretCitations.setOnSelectionChanged(_ -> switchInterpretCitations());
         tabSpecifyBibtex.setOnSelectionChanged(_ -> switchSpecifyBibtex());
+        tabEnterUrl.setOnSelectionChanged(_ -> switchEnterUrl());
     }
 
     @FXML
@@ -234,6 +242,7 @@ public class NewEntryView extends BaseDialog<BibEntry> {
         initializeLookupIdentifier();
         initializeInterpretCitations();
         initializeSpecifyBibTeX();
+        initializeEnterUrl();
     }
 
     private void initializeAddEntry() {
@@ -472,6 +481,31 @@ public class NewEntryView extends BaseDialog<BibEntry> {
         }
     }
 
+    @FXML
+    private void switchEnterUrl() {
+        if (!tabEnterUrl.isSelected()) {
+            return;
+        }
+
+        currentApproach = NewEntryDialogTab.ENTER_URL;
+        newEntryPreferences.setLatestApproach(NewEntryDialogTab.ENTER_URL);
+
+        if (urlText != null) {
+            Platform.runLater(() -> urlText.requestFocus());
+        }
+
+        if (generateButton != null) {
+            generateButton.disableProperty().bind(
+                    viewModel.urlTextValidatorProperty().not()
+            );
+            generateButton.setText(Localization.lang("Search"));
+        }
+    }
+
+    private void initializeEnterUrl() {
+        urlText.textProperty().bindBidirectional(viewModel.urlTextProperty());
+    }
+
     private void onEntryTypeSelected(EntryType type) {
         newEntryPreferences.setLatestImmediateType(type);
         result = new BibEntry(type);
@@ -506,6 +540,11 @@ public class NewEntryView extends BaseDialog<BibEntry> {
                 generateButton.setText(Localization.lang("Parsing..."));
                 viewModel.executeSpecifyBibtex();
                 switchSpecifyBibtex();
+                break;
+            case NewEntryDialogTab.ENTER_URL:
+                generateButton.setText(Localization.lang("Searching..."));
+                viewModel.executeEnterUrl();
+                switchEnterUrl();
                 break;
         }
     }
