@@ -1,5 +1,7 @@
 package org.jabref.gui.newentry;
 
+import org.jabref.logic.importer.fetcher.GenericUrlBasedFetcher;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -91,6 +93,9 @@ public class NewEntryViewModel {
     private final StringProperty bibtexText;
     private final Validator bibtexTextValidator;
     private Task<Optional<List<BibEntry>>> bibtexWorker;
+    private final StringProperty urlText;
+    private final Validator urlTextValidator;
+    private Task<Optional<List<BibEntry>>> urlWorker;
     private final Map<String, BibEntry> doiCache;
     private BibEntry duplicateEntry;
 
@@ -150,6 +155,12 @@ public class NewEntryViewModel {
                 StringUtil::isNotBlank,
                 ValidationMessage.error(Localization.lang("You must specify a Bib(La)TeX source.")));
         bibtexWorker = null;
+        urlText = new SimpleStringProperty();
+        urlTextValidator = new FunctionBasedValidator<>(
+                urlText,
+                StringUtil::isNotBlank,
+                ValidationMessage.error(Localization.lang("You must specify a URL.")));
+        urlWorker = null;
     }
 
     public void populateDOICache() {
@@ -236,6 +247,14 @@ public class NewEntryViewModel {
 
     public ReadOnlyBooleanProperty bibtexTextValidatorProperty() {
         return bibtexTextValidator.getValidationStatus().validProperty();
+    }
+
+    public StringProperty urlTextProperty() {
+        return urlText;
+    }
+
+    public ReadOnlyBooleanProperty urlTextValidatorProperty() {
+        return urlTextValidator.getValidationStatus().validProperty();
     }
 
     private BibEntry withCoversDownloaded(BibEntry entry) {
@@ -469,6 +488,26 @@ public class NewEntryViewModel {
         }
     }
 
+    private class WorkerLookupUrl extends Task<Optional<List<BibEntry>>> {
+        @Override
+        protected Optional<List<BibEntry>> call() throws FetcherException {
+            final String text = urlText.getValue();
+            final boolean textValid = urlTextValidator.getValidationStatus().isValid();
+
+            if (text == null || !textValid) {
+                return Optional.empty();
+            }
+
+            GenericUrlBasedFetcher fetcher = new GenericUrlBasedFetcher();
+            List<BibEntry> entries = fetcher.performSearch(text);
+
+            if (entries.isEmpty()) {
+                return Optional.empty();
+            }
+            return Optional.of(entries);
+        }
+    }
+
     public void executeSpecifyBibtex() {
         executing.setValue(true);
 
@@ -534,6 +573,56 @@ public class NewEntryViewModel {
         taskExecutor.execute(bibtexWorker);
     }
 
+    public void executeEnterUrl() {
+        executing.setValue(true);
+
+        cancel();
+        urlWorker = new WorkerLookupUrl();
+
+        urlWorker.setOnFailed(_ -> {
+            final Throwable exception = urlWorker.getException();
+            final String exceptionMessage = exception.getMessage();
+            LOGGER.error("An exception occurred when looking up URL.", exception);
+
+            dialogService.showInformationDialogAndWait(
+                    Localization.lang("Failed to look up URL"),
+                    Localization.lang(
+                            "The following error occurred:\n%0",
+                            exceptionMessage));
+
+            executing.set(false);
+        });
+
+        urlWorker.setOnSucceeded(_ -> {
+            final Optional<List<BibEntry>> result = urlWorker.getValue();
+
+            if (result.isEmpty()) {
+                dialogService.showWarningDialogAndWait(
+                        Localization.lang("Invalid result"),
+                        Localization.lang(
+                                "No entry could be generated from the provided URL.\n" +
+                                        "This entry may need to be added manually."));
+                executing.set(false);
+                return;
+            }
+
+            final ImportHandler handler = new ImportHandler(
+                    libraryTab.getBibDatabaseContext(),
+                    preferences,
+                    fileUpdateMonitor,
+                    libraryTab.getUndoManager(),
+                    stateManager,
+                    dialogService,
+                    taskExecutor);
+            handler.importEntriesWithDuplicateCheck(null, result.get());
+
+            executedSuccessfully.set(true);
+            executing.set(false);
+        });
+
+        taskExecutor.execute(urlWorker);
+    }
+
     public void cancel() {
         if (idLookupWorker != null) {
             idLookupWorker.cancel();
@@ -543,6 +632,10 @@ public class NewEntryViewModel {
         }
         if (bibtexWorker != null) {
             bibtexWorker.cancel();
+        }
+
+        if (urlWorker != null) {
+            urlWorker.cancel();
         }
     }
 }
