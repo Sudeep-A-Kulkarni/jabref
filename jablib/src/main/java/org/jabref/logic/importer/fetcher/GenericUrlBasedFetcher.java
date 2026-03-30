@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.jabref.logic.importer.FetcherException;
 import org.jabref.logic.importer.UrlBasedFetcher;
+import org.jabref.logic.l10n.Localization;
 import org.jabref.model.entry.BibEntry;
 import org.jabref.model.entry.field.StandardField;
 import org.jabref.model.entry.types.StandardEntryType;
@@ -13,7 +14,7 @@ public class GenericUrlBasedFetcher implements UrlBasedFetcher {
 
     @Override
     public String getName() {
-        return org.jabref.logic.l10n.Localization.lang("URL");    //prev return "URL";
+        return Localization.lang("URL");   //prev return "URL";
     }
 
     @Override
