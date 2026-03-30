@@ -1,3 +1,4 @@
+
 package org.jabref.logic.importer.fetcher;
 
 import java.util.List;
@@ -21,8 +22,9 @@ public class GenericUrlBasedFetcher implements UrlBasedFetcher {
             return List.of();
         }
 
-        BibEntry entry = new BibEntry(StandardEntryType.Misc);
-        entry.setField(StandardField.URL, url);
+        String trimmedUrl = url.trim();
+
+        BibEntry entry = new BibEntry(StandardEntryType.Misc).withField(StandardField.URL, trimmedUrl);
         return List.of(entry);
     }
 }
