@@ -13,7 +13,7 @@ public class GenericUrlBasedFetcher implements UrlBasedFetcher {
 
     @Override
     public String getName() {
-        return "URL";
+        return org.jabref.logic.l10n.Localization.lang("URL");    //prev return "URL";
     }
 
     @Override
