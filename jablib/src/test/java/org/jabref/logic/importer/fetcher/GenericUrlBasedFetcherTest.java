@@ -1,6 +1,7 @@
 package org.jabref.logic.importer.fetcher;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.jabref.logic.importer.FetcherException;
 import org.jabref.model.entry.BibEntry;
@@ -13,7 +14,9 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class GenericUrlBasedFetcherTest {
+class GenericUrlBasedFetcherTest {
+
+    private static final String TEST_URL = "https://gi-radar.de/397-coding-unterstuetzung-im-lauf-der-zeit/";
 
     private GenericUrlBasedFetcher fetcher;
 
@@ -24,37 +27,36 @@ public class GenericUrlBasedFetcherTest {
 
     @Test
     void getNameReturnsURL() {
-        assertEquals("URL",fetcher.getName());
+        assertEquals("URL", fetcher.getName());
     }
 
     @Test
     void performSearchWithValidUrlReturnsOneEntry() throws FetcherException {
-        String url = "https://www.semanticscholar.org/paper/Logic-LangChain%3A-Translating-Natural-Language-to-Lalwani-Lunawat/2ad8dbc163ce289e23e9c02b324c82d9c2fe8190";
-        List<BibEntry> results = fetcher.performSearch(url);
-
+        List<BibEntry> results = fetcher.performSearch(TEST_URL);
         assertEquals(1, results.size());
     }
 
     @Test
     void performSearchSetsUrlField() throws FetcherException {
-        String url = "https://www.semanticscholar.org/paper/Logic-LangChain%3A-Translating-Natural-Language-to-Lalwani-Lunawat/2ad8dbc163ce289e23e9c02b324c82d9c2fe8190";
-        List<BibEntry> results = fetcher.performSearch(url);
-
-        assertEquals(url, results.get(0).getField(StandardField.URL).orElse(""));
+        List<BibEntry> results = fetcher.performSearch(TEST_URL);
+        assertEquals(Optional.of(TEST_URL), results.get(0).getField(StandardField.URL));
     }
 
     @Test
     void performSearchCreatesMiscEntry() throws FetcherException {
-        String url = "https://www.semanticscholar.org/paper/Logic-LangChain%3A-Translating-Natural-Language-to-Lalwani-Lunawat/2ad8dbc163ce289e23e9c02b324c82d9c2fe8190";
-        List<BibEntry> results = fetcher.performSearch(url);
-
+        List<BibEntry> results = fetcher.performSearch(TEST_URL);
         assertEquals(StandardEntryType.Misc, results.get(0).getType());
     }
 
     @Test
     void performSearchWithBlankUrlReturnsEmptyList() throws FetcherException {
-        List<BibEntry> results = fetcher.performSearch(" ");
-
+        List<BibEntry> results = fetcher.performSearch("   ");
         assertTrue(results.isEmpty());
+    }
+
+    @Test
+    void performSearchTrimsUrl() throws FetcherException {
+        List<BibEntry> results = fetcher.performSearch("  " + TEST_URL + "  ");
+        assertEquals(Optional.of(TEST_URL), results.get(0).getField(StandardField.URL));
     }
 }

@@ -581,7 +581,7 @@ public class NewEntryViewModel {
 
         urlWorker.setOnFailed(_ -> {
             final Throwable exception = urlWorker.getException();
-            final String exceptionMessage = exception.getMessage();
+            final String exceptionMessage = Optional.ofNullable(exception.getMessage()).orElse(exception.toString());
             LOGGER.error("An exception occurred when looking up URL.", exception);
 
             dialogService.showInformationDialogAndWait(
