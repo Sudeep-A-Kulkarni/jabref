@@ -1,7 +1,5 @@
 package org.jabref.gui.newentry;
 
-import org.jabref.logic.importer.fetcher.GenericUrlBasedFetcher;
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -35,6 +33,7 @@ import org.jabref.logic.importer.FetcherServerException;
 import org.jabref.logic.importer.IdBasedFetcher;
 import org.jabref.logic.importer.ParseException;
 import org.jabref.logic.importer.WebFetchers;
+import org.jabref.logic.importer.fetcher.GenericUrlBasedFetcher;
 import org.jabref.logic.importer.fileformat.BibtexParser;
 import org.jabref.logic.importer.plaincitation.PlainCitationParser;
 import org.jabref.logic.importer.plaincitation.PlainCitationParserChoice;

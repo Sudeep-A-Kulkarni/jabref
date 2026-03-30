@@ -14,7 +14,7 @@ public class GenericUrlBasedFetcher implements UrlBasedFetcher {
 
     @Override
     public String getName() {
-        return Localization.lang("URL");   //prev return "URL";
+        return Localization.lang("URL");
     }
 
     @Override
