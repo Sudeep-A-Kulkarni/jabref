@@ -41,6 +41,7 @@ import org.jabref.logic.importer.plaincitation.PlainCitationParserFactory;
 import org.jabref.logic.l10n.Localization;
 import org.jabref.logic.layout.LayoutFormatter;
 import org.jabref.logic.layout.format.DOIStrip;
+import org.jabref.logic.util.URLUtil;
 import org.jabref.logic.util.strings.StringUtil;
 import org.jabref.model.TransferInformation;
 import org.jabref.model.TransferMode;
@@ -154,12 +155,15 @@ public class NewEntryViewModel {
                 StringUtil::isNotBlank,
                 ValidationMessage.error(Localization.lang("You must specify a Bib(La)TeX source.")));
         bibtexWorker = null;
-        urlText = new SimpleStringProperty();
+        urlText = new SimpleStringProperty("");
         urlTextValidator = new FunctionBasedValidator<>(
                 urlText,
-                StringUtil::isNotBlank,
-                ValidationMessage.error(Localization.lang("You must specify a URL.")));
-        urlWorker = null;
+                input -> {
+                    String sanitized = input == null ? "" : input.trim();
+                    return URLUtil.isValidHttpUrl(sanitized) || URLUtil.isValidHttpUrl("https://" + sanitized);
+                },
+                ValidationMessage.error(Localization.lang("Please enter a valid HTTP or HTTPS URL."))
+        );
     }
 
     public void populateDOICache() {
