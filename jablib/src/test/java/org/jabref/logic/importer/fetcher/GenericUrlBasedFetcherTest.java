@@ -41,7 +41,7 @@ class GenericUrlBasedFetcherTest {
         List<BibEntry> results = fetcher.fetchEntryFromUrl(TEST_URL);
         assertEquals(Optional.of(TEST_URL), results.get(0).getField(StandardField.URL));
     }
-        
+
     @Test
     void performSearchCreatesMiscEntry() throws FetcherException {
         List<BibEntry> results = fetcher.fetchEntryFromUrl(TEST_URL);
