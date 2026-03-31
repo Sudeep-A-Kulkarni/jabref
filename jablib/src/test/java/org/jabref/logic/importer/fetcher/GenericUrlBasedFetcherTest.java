@@ -27,7 +27,7 @@ class GenericUrlBasedFetcherTest {
 
     @Test
     void getNameReturnsURL() {
-        assertEquals("URL", fetcher.getName());
+        assertEquals("Generic URL Fetcher", fetcher.getName());
     }
 
     @Test
