@@ -502,7 +502,7 @@ public class NewEntryViewModel {
             }
 
             GenericUrlBasedFetcher fetcher = new GenericUrlBasedFetcher();
-            List<BibEntry> entries = fetcher.performSearch(text);
+            List<BibEntry> entries = fetcher.fetchEntryFromUrl(text);
 
             if (entries.isEmpty()) {
                 return Optional.empty();

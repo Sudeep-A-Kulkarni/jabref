@@ -14,7 +14,7 @@ import org.jabref.model.entry.types.StandardEntryType;
 public class GenericUrlBasedFetcher implements UrlBasedFetcher {
 
     @Override
-    public List<BibEntry> performSearch(String url) throws FetcherException {
+    public List<BibEntry> fetchEntryFromUrl(String url) throws FetcherException {
         if (StringUtil.isBlank(url)) {
             return Collections.emptyList();
         }

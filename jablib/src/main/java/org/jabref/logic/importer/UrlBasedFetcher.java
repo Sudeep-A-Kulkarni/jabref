@@ -5,5 +5,5 @@ import java.util.List;
 import org.jabref.model.entry.BibEntry;
 
 public interface UrlBasedFetcher extends WebFetcher {
-    List<BibEntry> performSearch(String url) throws FetcherException;
+    List<BibEntry> fetchEntryFromUrl(String url) throws FetcherException;
 }
