@@ -27,7 +27,6 @@ class GenericUrlBasedFetcherTest {
 
     @Test
     void getNameReturnsURL() {
-<<<<<<< HEAD
         assertEquals("Generic URL Fetcher", fetcher.getName());
     }
 
@@ -40,46 +39,20 @@ class GenericUrlBasedFetcherTest {
         BibEntry entry = results.get(0);
         assertEquals(Optional.of(TEST_URL), entry.getField(StandardField.URL));
         assertEquals(StandardEntryType.Misc, entry.getType());
-=======
-        assertEquals("URL", fetcher.getName());
-    }
-
-    @Test
-    void performSearchWithValidUrlReturnsOneEntry() throws FetcherException {
-        List<BibEntry> results = fetcher.performSearch(TEST_URL);
-        assertEquals(1, results.size());
-    }
-
-    @Test
-    void performSearchSetsUrlField() throws FetcherException {
-        List<BibEntry> results = fetcher.performSearch(TEST_URL);
-        assertEquals(Optional.of(TEST_URL), results.get(0).getField(StandardField.URL));
-    }
-
-    @Test
-    void performSearchCreatesMiscEntry() throws FetcherException {
-        List<BibEntry> results = fetcher.performSearch(TEST_URL);
-        assertEquals(StandardEntryType.Misc, results.get(0).getType());
->>>>>>> origin/main
     }
 
     @Test
     void performSearchWithBlankUrlReturnsEmptyList() throws FetcherException {
-<<<<<<< HEAD
         List<BibEntry> results = fetcher.fetchEntryFromUrl("   ");
-=======
-        List<BibEntry> results = fetcher.performSearch("   ");
->>>>>>> origin/main
+
         assertTrue(results.isEmpty());
     }
 
     @Test
     void performSearchTrimsUrl() throws FetcherException {
-<<<<<<< HEAD
+
         List<BibEntry> results = fetcher.fetchEntryFromUrl("  " + TEST_URL + "  ");
-=======
-        List<BibEntry> results = fetcher.performSearch("  " + TEST_URL + "  ");
->>>>>>> origin/main
+
         assertEquals(Optional.of(TEST_URL), results.get(0).getField(StandardField.URL));
     }
 }
