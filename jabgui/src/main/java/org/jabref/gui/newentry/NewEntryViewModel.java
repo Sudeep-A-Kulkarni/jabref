@@ -1,7 +1,5 @@
 package org.jabref.gui.newentry;
 
-import org.jabref.logic.importer.fetcher.GenericUrlBasedFetcher;
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -506,7 +504,6 @@ public class NewEntryViewModel {
             final Optional<List<BibEntry>> result = urlWorker.getValue();
 
             if (result.isEmpty()) {
-
                 dialogService.showWarningDialogAndWait(Localization.lang("Invalid result"), Localization.lang("No entry could be generated from the provided URL.\n" + "This entry may need to be added manually."));
                 executing.set(false);
                 return;
