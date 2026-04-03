@@ -31,21 +31,14 @@ class GenericUrlBasedFetcherTest {
     }
 
     @Test
-    void performSearchWithValidUrlReturnsOneEntry() throws FetcherException {
+    void fetchEntryFromUrlWithValidUrlCreatesCorrectEntry() throws FetcherException {
         List<BibEntry> results = fetcher.fetchEntryFromUrl(TEST_URL);
+
         assertEquals(1, results.size());
-    }
 
-    @Test
-    void performSearchSetsUrlField() throws FetcherException {
-        List<BibEntry> results = fetcher.fetchEntryFromUrl(TEST_URL);
-        assertEquals(Optional.of(TEST_URL), results.get(0).getField(StandardField.URL));
-    }
-
-    @Test
-    void performSearchCreatesMiscEntry() throws FetcherException {
-        List<BibEntry> results = fetcher.fetchEntryFromUrl(TEST_URL);
-        assertEquals(StandardEntryType.Misc, results.get(0).getType());
+        BibEntry entry = results.get(0);
+        assertEquals(Optional.of(TEST_URL), entry.getField(StandardField.URL));
+        assertEquals(StandardEntryType.Misc, entry.getType());
     }
 
     @Test
