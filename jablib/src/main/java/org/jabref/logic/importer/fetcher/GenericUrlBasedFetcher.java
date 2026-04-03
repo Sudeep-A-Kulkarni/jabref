@@ -1,26 +1,26 @@
 package org.jabref.logic.importer.fetcher;
 
-import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
 
 import org.jabref.logic.importer.FetcherException;
-import org.jabref.logic.importer.UrlBasedFetcher;
 import org.jabref.logic.util.URLUtil;
 import org.jabref.logic.util.strings.StringUtil;
 import org.jabref.model.entry.BibEntry;
 import org.jabref.model.entry.field.StandardField;
 import org.jabref.model.entry.types.StandardEntryType;
 
-public class GenericUrlBasedFetcher implements UrlBasedFetcher {
+public class GenericUrlBasedFetcher {
 
-    @Override
     public List<BibEntry> fetchEntryFromUrl(String url) throws FetcherException {
         if (StringUtil.isBlank(url)) {
-            return Collections.emptyList();
+            return List.of();
         }
 
         String normalizedUrl = url.trim();
-        if (!normalizedUrl.toLowerCase().startsWith("http://") && !normalizedUrl.toLowerCase().startsWith("https://")) {
+        String lower = normalizedUrl.toLowerCase(Locale.ROOT);
+
+        if (!lower.startsWith("http://") && !lower.startsWith("https://")) {
             normalizedUrl = "https://" + normalizedUrl;
         }
 
@@ -28,14 +28,11 @@ public class GenericUrlBasedFetcher implements UrlBasedFetcher {
             throw new FetcherException("Invalid URL: " + normalizedUrl);
         }
 
-        // Create a new @Misc entry and set the URL field
-        BibEntry entry = new BibEntry(StandardEntryType.Misc);
-        entry.setField(StandardField.URL, normalizedUrl);
+        BibEntry entry = new BibEntry(StandardEntryType.Misc).withField(StandardField.URL, normalizedUrl);
 
-        return Collections.singletonList(entry);
+        return List.of(entry);
     }
 
-    @Override
     public String getName() {
         return "Generic URL Fetcher";
     }
