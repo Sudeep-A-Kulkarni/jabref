@@ -11,6 +11,7 @@ Note that this project **does not** adhere to [Semantic Versioning](https://semv
 
 ### Added
 
+- Added "Enter URL" tab in New Entry dialog to create a `@Misc` entry from any URL. [#15411](https://github.com/JabRef/jabref/issues/15411) 
 - We added support for downloading full-text PDFs from Wiley journals via the Wiley TDM API. [#13404](https://github.com/JabRef/jabref/issues/13404)
 - We added "Enter URL" tab in New Entry dialog to create a `@Misc` entry from any URL. [#15411](https://github.com/JabRef/jabref/issues/15411)
 - We added `--key-patterns` option to CLI parameters to allows users to set a citation key's pattern for a specific entry type. [#14707](https://github.com/JabRef/jabref/issues/14707)

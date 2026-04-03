@@ -1,5 +1,7 @@
 package org.jabref.gui.newentry;
 
+import org.jabref.logic.importer.fetcher.GenericUrlBasedFetcher;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -136,6 +138,7 @@ public class NewEntryViewModel {
         bibtexText = new SimpleStringProperty();
         bibtexTextValidator = new FunctionBasedValidator<>(bibtexText, StringUtil::isNotBlank, ValidationMessage.error(Localization.lang("You must specify a Bib(La)TeX source.")));
         bibtexWorker = null;
+<<<<<<< HEAD
 
         urlText = new SimpleStringProperty("");
         urlTextValidator = new FunctionBasedValidator<>(urlText, input -> {
@@ -152,6 +155,14 @@ public class NewEntryViewModel {
 
             return URLUtil.isValidHttpUrl(normalized);
         }, ValidationMessage.error(Localization.lang("Please enter a valid HTTP or HTTPS URL.")));
+=======
+        urlText = new SimpleStringProperty();
+        urlTextValidator = new FunctionBasedValidator<>(
+                urlText,
+                StringUtil::isNotBlank,
+                ValidationMessage.error(Localization.lang("You must specify a URL.")));
+        urlWorker = null;
+>>>>>>> origin/main
     }
 
     public void populateDOICache() {
@@ -431,7 +442,11 @@ public class NewEntryViewModel {
             }
 
             GenericUrlBasedFetcher fetcher = new GenericUrlBasedFetcher();
+<<<<<<< HEAD
             List<BibEntry> entries = fetcher.fetchEntryFromUrl(text);
+=======
+            List<BibEntry> entries = fetcher.performSearch(text);
+>>>>>>> origin/main
 
             if (entries.isEmpty()) {
                 return Optional.empty();
@@ -494,7 +509,15 @@ public class NewEntryViewModel {
             final String exceptionMessage = Optional.ofNullable(exception.getMessage()).orElse(exception.toString());
             LOGGER.error("An exception occurred when looking up URL.", exception);
 
+<<<<<<< HEAD
             dialogService.showInformationDialogAndWait(Localization.lang("Failed to look up URL"), Localization.lang("The following error occurred:\n%0", exceptionMessage));
+=======
+            dialogService.showInformationDialogAndWait(
+                    Localization.lang("Failed to look up URL"),
+                    Localization.lang(
+                            "The following error occurred:\n%0",
+                            exceptionMessage));
+>>>>>>> origin/main
 
             executing.set(false);
         });
@@ -503,12 +526,31 @@ public class NewEntryViewModel {
             final Optional<List<BibEntry>> result = urlWorker.getValue();
 
             if (result.isEmpty()) {
+<<<<<<< HEAD
                 dialogService.showWarningDialogAndWait(Localization.lang("Invalid result"), Localization.lang("No entry could be generated from the provided URL.\n" + "This entry may need to be added manually."));
+=======
+                dialogService.showWarningDialogAndWait(
+                        Localization.lang("Invalid result"),
+                        Localization.lang(
+                                "No entry could be generated from the provided URL.\n" +
+                                        "This entry may need to be added manually."));
+>>>>>>> origin/main
                 executing.set(false);
                 return;
             }
 
+<<<<<<< HEAD
             final ImportHandler handler = new ImportHandler(libraryTab.getBibDatabaseContext(), preferences, fileUpdateMonitor, libraryTab.getUndoManager(), stateManager, dialogService, taskExecutor);
+=======
+            final ImportHandler handler = new ImportHandler(
+                    libraryTab.getBibDatabaseContext(),
+                    preferences,
+                    fileUpdateMonitor,
+                    libraryTab.getUndoManager(),
+                    stateManager,
+                    dialogService,
+                    taskExecutor);
+>>>>>>> origin/main
             handler.importEntriesWithDuplicateCheck(null, result.get());
 
             executedSuccessfully.set(true);
