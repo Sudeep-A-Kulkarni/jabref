@@ -123,28 +123,28 @@ public class NewEntryViewModel {
 
         idText = new SimpleStringProperty();
         idTextValidator = new FunctionBasedValidator<>(
-                idText,
-                StringUtil::isNotBlank,
-                ValidationMessage.error(Localization.lang("You must specify an identifier.")));
+                    idText,
+                    StringUtil::isNotBlank,
+                    ValidationMessage.error(Localization.lang("You must specify an identifier.")));
 
         duplicateDoiValidator = new FunctionBasedValidator<>(
-                idText,
-                input -> checkDOI(input).orElse(null));
+                    idText,
+                    input -> checkDOI(input).orElse(null));
 
         idFetchers = new SimpleListProperty<>(FXCollections.observableArrayList());
         idFetchers.addAll(WebFetchers.getIdBasedFetchers(preferences.getImportFormatPreferences(), preferences.getImporterPreferences()));
         idFetcher = new SimpleObjectProperty<>();
         idFetcherValidator = new FunctionBasedValidator<>(
-                idFetcher,
-                Objects::nonNull,
-                ValidationMessage.error(Localization.lang("You must select an identifier type.")));
+                    idFetcher,
+                    Objects::nonNull,
+                    ValidationMessage.error(Localization.lang("You must select an identifier type.")));
         idLookupWorker = null;
 
         interpretText = new SimpleStringProperty();
         interpretTextValidator = new FunctionBasedValidator<>(
-            interpretText,
-            StringUtil::isNotBlank,
-            ValidationMessage.error(Localization.lang("You must specify one (or more) citations.")));
+                interpretText,
+                StringUtil::isNotBlank,
+                ValidationMessage.error(Localization.lang("You must specify one (or more) citations.")));
         interpretParsers = new SimpleListProperty<>(FXCollections.observableArrayList());
         interpretParsers.addAll(PlainCitationParserChoice.values());
         interpretParser = new SimpleObjectProperty<>();
@@ -152,9 +152,9 @@ public class NewEntryViewModel {
 
         bibtexText = new SimpleStringProperty();
         bibtexTextValidator = new FunctionBasedValidator<>(
-                bibtexText,
-                StringUtil::isNotBlank,
-                ValidationMessage.error(Localization.lang("You must specify a Bib(La)TeX source.")));
+                    bibtexText,
+                    StringUtil::isNotBlank,
+                    ValidationMessage.error(Localization.lang("You must specify a Bib(La)TeX source.")));
         bibtexWorker = null;
 
         urlText = new SimpleStringProperty("");
