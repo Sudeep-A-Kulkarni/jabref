@@ -371,7 +371,7 @@ public class NewEntryViewModel {
                         Localization.lang("Invalid result returned"),
                         Localization.lang(
                                 "An unknown error has occurred.\n" +
-                                    "This entry may need to be added manually."));
+                                        "This entry may need to be added manually."));
                 executing.set(false);
                 return;
             }
